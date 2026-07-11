@@ -37,6 +37,7 @@
   "pi": {
     "extensions": [
       "./src/index.ts"
-    ]
+    ],
+    "image": "https://raw.githubusercontent.com/jekatigr/stikybar/main/docs/preview.gif"
   }
 }
