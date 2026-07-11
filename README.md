@@ -2,61 +2,16 @@
 
 Input bar extension for [pi](https://github.com/badlogic/pi-mono) coding agent.
 
-This project is a rework of [pi-powerline-footer](https://github.com/nicobailon/pi-powerline-footer) with simplified approach to customization and limited feature list.
-
 ## Preview
 
-
+![StickyBar preview](./docs/preview.gif)
 
 ## Features
 
-- **Two configurable status rows** with live model, thinking level, Git state, context usage, token usage, cost, elapsed time, clock, session, hostname, cache, and extension-status segments.
-- **Predictable narrow-terminal behavior:** overflowing top-row items move to the beginning of the bottom row; remaining overflow is hidden from the end.
-- **Custom extension-status items** with labels and visibility controls.
-- **Fixed editor and chat viewport** with mouse-wheel scrolling, text selection, drag/double-click selection, and terminal context-menu support.
-- **Keyboard navigation** for the fixed chat viewport: `Home`, `End`, `PageUp`, and `PageDown`.
-- **Last-prompt preview** beneath the editor.
-- **Themed working vibes:** generated on demand or loaded from a local file, with optional rainbow animation.
-
-### Status layout
-
-Configure the order and contents of both status rows. The layout adapts when the terminal is narrow without reordering the items that remain visible.
-
-> **Screenshot placeholder:** `docs/screenshots/status-layout.png`
->
-> _Wide and narrow terminal views showing both status rows and overflow behavior._
-
-### Fixed editor and chat navigation
-
-Keep the editor fixed while the chat viewport scrolls. Use the mouse wheel or `Home`, `End`, `PageUp`, and `PageDown` to navigate; standard mouse selection and terminal context-menu actions remain available.
-
-> **Screenshot placeholder:** `docs/screenshots/fixed-editor.png`
->
-> _Scrolled chat viewport with the editor and status rows held in place._
-
-### Last prompt
-
-Optionally display the most recently submitted prompt beneath the editor for quick context while working.
-
-> **Screenshot placeholder:** `docs/screenshots/last-prompt.png`
->
-> _Last-prompt preview below the fixed editor._
-
-### Extension statuses
-
-Show all extension statuses in one segment or promote individual values to named custom items.
-
-> **Screenshot placeholder:** `docs/screenshots/extension-statuses.png`
->
-> _Built-in extension-status segment alongside a custom status item._
-
-### Working vibes
-
-Replace Pi's working message with short messages in any theme. Messages can be generated while Pi works or read locally from a previously generated vibe file. Rainbow animation is optional.
-
-> **Screenshot placeholder:** `docs/screenshots/working-vibes.png`
->
-> _Themed working message, including a rainbow-animation example._
+- **Fixed editor** - prompt is always visible
+- **Two configurable status rows** with model, git state and more, check table below
+- **Last-prompt preview** under the input prompt line
+- **Themed working vibes:** generated realtime based on your input or loaded from a local file, with optional rainbow animation.
 
 ## Installation
 
@@ -64,7 +19,7 @@ Replace Pi's working message with short messages in any theme. Messages can be g
 pi install npm:stickybar
 ```
 
-Restart pi after installation.
+Restart pi after installation or call `/reload`.
 
 ## Configuration
 
@@ -202,17 +157,6 @@ Extensions publish a value with:
 ctx.ui.setStatus("ci-status", "passing");
 ```
 
-### Fixed editor
-
-The fixed editor is enabled by default. Set `fixedEditor` to `false` to use the normal editor layout. `mouseScroll` and `showLastPrompt` can be toggled independently.
-
-| Input | Action |
-| --- | --- |
-| `Home` | Scroll chat to the top |
-| `End` | Scroll chat to the bottom |
-| `PageUp` / `PageDown` | Scroll chat by one page |
-| Mouse wheel | Scroll chat when `mouseScroll` is enabled |
-
 ### Working vibes
 
 Manage vibes from pi with `/stickybar vibe`:
@@ -229,3 +173,5 @@ Manage vibes from pi with `/stickybar vibe`:
 ```
 
 `generate` mode requests a short message from the configured model while Pi is working. `file` mode rotates through messages in `~/.pi/agent/vibes/<theme>.txt` and does not make a model request.
+
+> This project is a rework of [pi-powerline-footer](https://github.com/nicobailon/pi-powerline-footer) with simplified approach to customization and limited feature list.
