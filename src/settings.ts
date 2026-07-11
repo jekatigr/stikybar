@@ -1,7 +1,7 @@
 import { CONFIG_DIR_NAME, getAgentDir } from "@earendil-works/pi-coding-agent";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import type { PowerlineConfig } from "./types.ts";
+import type { StickybarConfig } from "./types.ts";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -20,7 +20,7 @@ function readSettingsFile(path: string): Record<string, unknown> {
     const parsed = existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : {};
     return isRecord(parsed) ? parsed : {};
   } catch (error) {
-    console.debug(`[powerline-footer] Failed to read ${path}:`, error);
+    console.debug(`[stickybar] Failed to read ${path}:`, error);
     return {};
   }
 }
@@ -36,26 +36,26 @@ function mergeSettings(base: Record<string, unknown>, override: Record<string, u
 }
 
 /** Loads Pi's normal global settings followed by project-local overrides. */
-export function readPowerlineSettings(cwd: string): Record<string, unknown> {
+export function readStickybarSettings(cwd: string): Record<string, unknown> {
   return mergeSettings(readSettingsFile(globalSettingsPath()), readSettingsFile(projectSettingsPath(cwd)));
 }
 
-/** Persists to the layer that already owns the `powerline` configuration. */
-export function writePowerlineConfig(cwd: string, config: PowerlineConfig): boolean {
+/** Persists to the layer that already owns the `stickybar` configuration. */
+export function writeStickybarConfig(cwd: string, config: StickybarConfig): boolean {
   const projectPath = projectSettingsPath(cwd);
   const project = readSettingsFile(projectPath);
   const globalPath = globalSettingsPath();
   const global = readSettingsFile(globalPath);
-  const targetPath = Object.hasOwn(project, "powerline") ? projectPath : globalPath;
+  const targetPath = Object.hasOwn(project, "stickybar") ? projectPath : globalPath;
   const target = targetPath === projectPath ? project : global;
-  target.powerline = config;
+  target.stickybar = config;
 
   try {
     mkdirSync(dirname(targetPath), { recursive: true });
     writeFileSync(targetPath, JSON.stringify(target, null, 2) + "\n");
     return true;
   } catch (error) {
-    console.debug(`[powerline-footer] Failed to write ${targetPath}:`, error);
+    console.debug(`[stickybar] Failed to write ${targetPath}:`, error);
     return false;
   }
 }

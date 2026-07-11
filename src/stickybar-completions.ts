@@ -29,8 +29,8 @@ function matching(items: readonly Hint[], prefix: string): Hint[] | null {
   return matches.length ? matches : null;
 }
 
-/** Completion hints for `/powerline` without inventing theme or model names. */
-export function getPowerlineArgumentCompletions(prefix: string): AutocompleteItem[] | null {
+/** Completion hints for `/stickybar` without inventing theme or model names. */
+export function getStickybarArgumentCompletions(prefix: string): AutocompleteItem[] | null {
   const trailingSpace = /\s$/.test(prefix);
   const words = prefix.trim().split(/\s+/).filter(Boolean);
 

@@ -360,7 +360,7 @@ export class TerminalSplitCompositor {
   install(): void {
     if (this.installed) return;
     if (typeof this.terminal.write !== "function") {
-      throw new Error("[powerline-footer] Fixed editor compositor expected terminal.write(data) to exist");
+      throw new Error("[stickybar] Fixed editor compositor expected terminal.write(data) to exist");
     }
 
     this.originalWrite(

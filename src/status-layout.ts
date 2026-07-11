@@ -1,7 +1,7 @@
 import { visibleWidth } from "@earendil-works/pi-tui";
 import { separator } from "./colors.ts";
 import { renderSegment } from "./segments.ts";
-import type { PowerlineConfig, SegmentContext, StatusLineSegmentId } from "./types.ts";
+import type { SegmentContext, StatusLineSegmentId, StickybarConfig } from "./types.ts";
 
 const SEP = separator(" | ");
 
@@ -29,7 +29,7 @@ function renderLine(ids: readonly StatusLineSegmentId[], context: SegmentContext
 }
 
 /** Top overflow moves to the front of bottom; remaining bottom overflow is dropped. */
-export function renderStatusLayout(config: PowerlineConfig, context: SegmentContext, width: number): { top: string; bottom: string } {
+export function renderStatusLayout(config: StickybarConfig, context: SegmentContext, width: number): { top: string; bottom: string } {
   const top = renderLine(config.top, context, width);
   const configuredBottom = config.bottom.flatMap((id) => {
     const rendered = renderSegment(id, context);

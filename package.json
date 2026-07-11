@@ -1,5 +1,5 @@
 {
-  "name": "pi-powerline-footer",
+  "name": "stickybar",
   "version": "0.6.1",
   "description": "Configurable two-line status bar and fixed editor extension for pi coding agent",
   "type": "module",
@@ -13,7 +13,7 @@
     "pi-package",
     "pi",
     "coding-agent",
-    "powerline",
+    "stickybar",
     "status-bar",
     "extension"
   ],

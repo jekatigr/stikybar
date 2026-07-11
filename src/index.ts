@@ -13,13 +13,13 @@ import {
   collectHiddenExtensionStatusKeys,
   getNotificationExtensionStatuses,
   mergeSegmentOptions,
-  parsePowerlineConfig,
-} from "./powerline-config.ts";
+  parseStickybarConfig,
+} from "./stickybar-config.ts";
 import { createRenderScheduler } from "./render-scheduler.ts";
-import { getPowerlineArgumentCompletions } from "./powerline-completions.ts";
-import { readPowerlineSettings, writePowerlineConfig } from "./settings.ts";
+import { getStickybarArgumentCompletions } from "./stickybar-completions.ts";
+import { readStickybarSettings, writeStickybarConfig } from "./settings.ts";
 import { renderStatusLayout } from "./status-layout.ts";
-import type { PowerlineConfig, SegmentContext } from "./types.ts";
+import type { SegmentContext, StickybarConfig } from "./types.ts";
 import {
   generateVibesBatch,
   hasVibeFile,
@@ -75,8 +75,8 @@ function customCompactionEnabled(cwd: string): boolean {
   return false;
 }
 
-export default function powerlineFooter(pi: ExtensionAPI) {
-  let config = parsePowerlineConfig(undefined);
+export default function stickybar(pi: ExtensionAPI) {
+  let config = parseStickybarConfig(undefined);
   let currentCtx: any = null;
   let footerData: ReadonlyFooterDataProvider | null = null;
   let tui: any = null;
@@ -268,16 +268,16 @@ export default function powerlineFooter(pi: ExtensionAPI) {
   }
 
   function installWidgets(ctx: any): void {
-    ctx.ui.setWidget("powerline-top", (_tui: any, theme: Theme) => ({ render: (width: number) => topLines(width, theme), invalidate, dispose() {} }), { placement: "aboveEditor" });
-    ctx.ui.setWidget("powerline-bottom", (_tui: any, theme: Theme) => ({ render: (width: number) => bottomLines(width, theme), invalidate, dispose() {} }), { placement: "belowEditor" });
-    ctx.ui.setWidget("powerline-last-prompt", (_tui: any, theme: Theme) => ({ render: (width: number) => lastPromptLines(width, theme), invalidate, dispose() {} }), { placement: "belowEditor" });
+    ctx.ui.setWidget("stickybar-top", (_tui: any, theme: Theme) => ({ render: (width: number) => topLines(width, theme), invalidate, dispose() {} }), { placement: "aboveEditor" });
+    ctx.ui.setWidget("stickybar-bottom", (_tui: any, theme: Theme) => ({ render: (width: number) => bottomLines(width, theme), invalidate, dispose() {} }), { placement: "belowEditor" });
+    ctx.ui.setWidget("stickybar-last-prompt", (_tui: any, theme: Theme) => ({ render: (width: number) => lastPromptLines(width, theme), invalidate, dispose() {} }), { placement: "belowEditor" });
   }
 
   function setupUi(ctx: any): void {
     disposeCompositor();
-    ctx.ui.setWidget("powerline-top", undefined);
-    ctx.ui.setWidget("powerline-bottom", undefined);
-    ctx.ui.setWidget("powerline-last-prompt", undefined);
+    ctx.ui.setWidget("stickybar-top", undefined);
+    ctx.ui.setWidget("stickybar-bottom", undefined);
+    ctx.ui.setWidget("stickybar-last-prompt", undefined);
     const factory = (editorTui: any, theme: any, keybindings: any) => {
       const next = new CustomEditor(editorTui, theme, keybindings);
       let submit: unknown;
@@ -327,20 +327,20 @@ export default function powerlineFooter(pi: ExtensionAPI) {
 
   function persistVibe(ctx: any): void {
     updateVibeSettings(config.vibe);
-    if (!writePowerlineConfig(ctx.cwd, config)) ctx.ui.notify("Vibe updated for this session, but settings could not be saved", "warning");
+    if (!writeStickybarConfig(ctx.cwd, config)) ctx.ui.notify("Vibe updated for this session, but settings could not be saved", "warning");
   }
 
-  pi.registerCommand("powerline", {
-    description: "Show powerline status or configure working vibes",
-    getArgumentCompletions: getPowerlineArgumentCompletions,
+  pi.registerCommand("stickybar", {
+    description: "Show Stickybar status or configure working vibes",
+    getArgumentCompletions: getStickybarArgumentCompletions,
     handler: async (args, ctx) => {
       const words = args.trim().split(/\s+/).filter(Boolean);
       if (!words.length) {
-        ctx.ui.notify(`Powerline: fixed editor ${config.fixedEditor ? "on" : "off"}; vibe ${config.vibe.theme ?? "off"}`, "info");
+        ctx.ui.notify(`Stickybar: fixed editor ${config.fixedEditor ? "on" : "off"}; vibe ${config.vibe.theme ?? "off"}`, "info");
         return;
       }
       if (words[0] !== "vibe") {
-        ctx.ui.notify("Usage: /powerline [vibe [theme|off|mode|model|rainbow|generate]]", "info");
+        ctx.ui.notify("Usage: /stickybar [vibe [theme|off|mode|model|rainbow|generate]]", "info");
         return;
       }
       const action = words[1]?.toLowerCase();
@@ -351,17 +351,17 @@ export default function powerlineFooter(pi: ExtensionAPI) {
       if (action === "off") config.vibe.theme = null;
       else if (action === "rainbow") config.vibe.rainbow = words[2] === "on" ? true : words[2] === "off" ? false : !config.vibe.rainbow;
       else if (action === "mode") {
-        if (words[2] !== "generate" && words[2] !== "file") return ctx.ui.notify("Usage: /powerline vibe mode generate|file", "warning");
+        if (words[2] !== "generate" && words[2] !== "file") return ctx.ui.notify("Usage: /stickybar vibe mode generate|file", "warning");
         if (words[2] === "file" && config.vibe.theme && !hasVibeFile(config.vibe.theme)) return ctx.ui.notify("Generate a vibe file before selecting file mode", "warning");
         config.vibe.mode = words[2];
       } else if (action === "model") {
         const model = words.slice(2).join("/");
-        if (!model.includes("/")) return ctx.ui.notify("Usage: /powerline vibe model provider/model", "warning");
+        if (!model.includes("/")) return ctx.ui.notify("Usage: /stickybar vibe model provider/model", "warning");
         config.vibe.model = model;
       } else if (action === "generate") {
         const count = /^\d+$/.test(words.at(-1) ?? "") ? Number(words.pop()) : 100;
         const theme = words.slice(2).join(" ");
-        if (!theme) return ctx.ui.notify("Usage: /powerline vibe generate <theme> [count]", "warning");
+        if (!theme) return ctx.ui.notify("Usage: /stickybar vibe generate <theme> [count]", "warning");
         const result = await generateVibesBatch(theme, count);
         return ctx.ui.notify(result.success ? `Generated ${result.count} vibes for ${theme}` : `Vibe generation failed: ${result.error}`, result.success ? "info" : "error");
       } else {
@@ -375,7 +375,7 @@ export default function powerlineFooter(pi: ExtensionAPI) {
 
   pi.on("session_start", async (_event, ctx) => {
     currentCtx = ctx;
-    config = parsePowerlineConfig(readPowerlineSettings(ctx.cwd).powerline);
+    config = parseStickybarConfig(readStickybarSettings(ctx.cwd).stickybar);
     removeGitStatusListener?.();
     removeGitStatusListener = onGitStatusChange(() => invalidate(true));
     customCompaction = customCompactionEnabled(ctx.cwd);

@@ -2,7 +2,7 @@ import { hostname } from "node:os";
 import { basename } from "node:path";
 import type { BuiltinStatusLineSegmentId, RenderedSegment, SegmentContext, SemanticColor, StatusLineSegment, StatusLineSegmentId } from "./types.ts";
 import { color, separator } from "./colors.ts";
-import { normalizeCompactExtensionStatus, normalizeExtensionStatusValue } from "./powerline-config.ts";
+import { normalizeCompactExtensionStatus, normalizeExtensionStatusValue } from "./stickybar-config.ts";
 
 const SEP = separator(" | ");
 

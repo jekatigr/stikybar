@@ -2,7 +2,7 @@ import { visibleWidth } from "@earendil-works/pi-tui";
 import type {
   BuiltinStatusLineSegmentId,
   CustomStatusItem,
-  PowerlineConfig,
+  StickybarConfig,
   StatusLineSegmentId,
   StatusLineSegmentOptions,
   VibeSettings,
@@ -24,7 +24,7 @@ const DEFAULT_VIBE: VibeSettings = {
   maxLength: 65,
 };
 
-export const DEFAULT_POWERLINE_CONFIG: PowerlineConfig = {
+export const DEFAULT_STICKYBAR_CONFIG: StickybarConfig = {
   fixedEditor: true,
   mouseScroll: true,
   showLastPrompt: true,
@@ -145,9 +145,9 @@ function parseVibe(value: unknown): VibeSettings {
   };
 }
 
-/** Reads only the canonical `powerline` object. Legacy shapes intentionally fall back to defaults. */
-export function parsePowerlineConfig(value: unknown): PowerlineConfig {
-  if (!isRecord(value)) return structuredClone(DEFAULT_POWERLINE_CONFIG);
+/** Reads only the canonical `stickybar` object. Legacy shapes intentionally fall back to defaults. */
+export function parseStickybarConfig(value: unknown): StickybarConfig {
+  if (!isRecord(value)) return structuredClone(DEFAULT_STICKYBAR_CONFIG);
   const customItems = parseCustomItems(value.customItems);
   const customIds = new Set(customItems.map((item) => `custom:${item.id}`));
   const known = (id: StatusLineSegmentId) => !id.startsWith("custom:") || customIds.has(id);
@@ -160,7 +160,7 @@ export function parsePowerlineConfig(value: unknown): PowerlineConfig {
     showLastPrompt: value.showLastPrompt !== false,
     top,
     bottom,
-    options: mergeSegmentOptions(DEFAULT_POWERLINE_CONFIG.options, parseOptions(value.options)),
+    options: mergeSegmentOptions(DEFAULT_STICKYBAR_CONFIG.options, parseOptions(value.options)),
     customItems,
     vibe: parseVibe(value.vibe),
   };

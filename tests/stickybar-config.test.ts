@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parsePowerlineConfig } from "../src/powerline-config.ts";
+import { parseStickybarConfig } from "../src/stickybar-config.ts";
 
-test("powerline defaults to the single built-in layout", () => {
-  const config = parsePowerlineConfig(undefined);
+test("stickybar defaults to the single built-in layout", () => {
+  const config = parseStickybarConfig(undefined);
   assert.deepEqual(config.top, ["git", "context_pct", "token_in", "token_out", "cost", "time_spent"]);
   assert.deepEqual(config.bottom, ["model", "thinking", "path", "extension_statuses"]);
   assert.equal(config.fixedEditor, true);
@@ -12,7 +12,7 @@ test("powerline defaults to the single built-in layout", () => {
 });
 
 test("custom items are placed directly in the configured line order", () => {
-  const config = parsePowerlineConfig({
+  const config = parseStickybarConfig({
     top: ["model", "custom:ci", "git", "custom:missing"],
     bottom: ["git", "context_pct", "custom:ci"],
     customItems: [{ id: "ci", statusKey: "ci-status" }],
@@ -21,8 +21,8 @@ test("custom items are placed directly in the configured line order", () => {
   assert.deepEqual(config.bottom, ["context_pct"]);
 });
 
-test("vibe settings are nested under powerline and validated", () => {
-  const config = parsePowerlineConfig({
+test("vibe settings are nested under stickybar and validated", () => {
+  const config = parseStickybarConfig({
     vibe: { theme: "pirate", mode: "file", rainbow: true, model: "openai/gpt-test", refreshInterval: 5 },
   });
   assert.equal(config.vibe.theme, "pirate");

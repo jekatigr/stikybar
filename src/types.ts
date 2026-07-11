@@ -69,7 +69,7 @@ export interface CustomStatusItem {
   excludeFromExtensionStatuses: boolean;
 }
 
-export interface PowerlineConfig {
+export interface StickybarConfig {
   fixedEditor: boolean;
   mouseScroll: boolean;
   showLastPrompt: boolean;

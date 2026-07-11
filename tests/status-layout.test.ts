@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parsePowerlineConfig } from "../src/powerline-config.ts";
+import { parseStickybarConfig } from "../src/stickybar-config.ts";
 import { renderStatusLayout } from "../src/status-layout.ts";
 import type { SegmentContext } from "../src/types.ts";
 
@@ -26,7 +26,7 @@ const context: SegmentContext = {
 };
 
 test("top-row overflow is prepended to the bottom row", () => {
-  const config = parsePowerlineConfig({ top: ["session", "model"], bottom: ["path"] });
+  const config = parseStickybarConfig({ top: ["session", "model"], bottom: ["path"] });
 
   const layout = renderStatusLayout(config, context, 18);
 

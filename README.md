@@ -1,6 +1,8 @@
-# pi-powerline-footer
+# stickybar
 
 A configurable two-line status bar for [pi](https://github.com/badlogic/pi-mono), with a fixed editor and themed working messages.
+
+Stickybar is an independent continuation of [pi-powerline-footer](https://github.com/nicobailon/pi-powerline-footer).
 
 ## Features
 
@@ -16,18 +18,18 @@ It does **not** provide bash mode, editor stash/history/clipboard tools, a welco
 ## Installation
 
 ```bash
-pi install npm:pi-powerline-footer
+pi install npm:stickybar
 ```
 
 Restart pi to activate.
 
 ## Configuration
 
-All extension settings live under one `powerline` object. Pi loads global settings first and project-local settings second, so `.pi/settings.json` overrides `~/.pi/agent/settings.json`.
+All extension settings live under one `stickybar` object. Pi loads global settings first and project-local settings second, so `.pi/settings.json` overrides `~/.pi/agent/settings.json`.
 
 ```json
 {
-  "powerline": {
+  "stickybar": {
     "fixedEditor": true,
     "mouseScroll": true,
     "showLastPrompt": true,
@@ -90,7 +92,7 @@ Use `custom:<id>` for a configured extension status item:
 
 ```json
 {
-  "powerline": {
+  "stickybar": {
     "top": ["model", "path", "custom:ci", "git"],
     "bottom": ["context_pct", "extension_statuses"],
     "customItems": [
@@ -119,17 +121,17 @@ Extensions publish these values through `ctx.ui.setStatus("ci-status", "passing"
 
 ### Working vibes
 
-Vibes are configured under `powerline.vibe` and managed through `/powerline vibe`:
+Vibes are configured under `stickybar.vibe` and managed through `/stickybar vibe`:
 
 ```text
-/powerline                    Show current status
-/powerline vibe               Show vibe status
-/powerline vibe pirate        Enable a theme
-/powerline vibe off           Disable vibes
-/powerline vibe rainbow on    Enable rainbow animation
-/powerline vibe mode file     Use ~/.pi/agent/vibes/<theme>.txt
-/powerline vibe model provider/model
-/powerline vibe generate pirate 100
+/stickybar                    Show current status
+/stickybar vibe               Show vibe status
+/stickybar vibe pirate        Enable a theme
+/stickybar vibe off           Disable vibes
+/stickybar vibe rainbow on    Enable rainbow animation
+/stickybar vibe mode file     Use ~/.pi/agent/vibes/<theme>.txt
+/stickybar vibe model provider/model
+/stickybar vibe generate pirate 100
 ```
 
 `generate` mode makes a short model request while Pi is working. `file` mode selects messages from a generated text file and makes no request.
