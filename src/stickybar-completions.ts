@@ -37,18 +37,25 @@ export function getStickybarArgumentCompletions(prefix: string): AutocompleteIte
   if (!words.length) {
     return [{ value: "vibe", label: "vibe", description: "Configure themed working messages" }];
   }
+  const vibeHint = { value: "vibe", label: "vibe", description: "Configure themed working messages" };
+  if (words.length === 1 && !trailingSpace) return matching([vibeHint], words[0]);
   if (words[0] !== "vibe") return null;
-  if (words.length === 1 && !trailingSpace) return matching([{ value: "vibe", label: "vibe", description: "Configure themed working messages" }], words[0]);
   if (words.length === 1) return VIBE_ACTIONS;
 
   const action = words[1]?.toLowerCase();
+
+  // Partial action word — match against known actions
+  if (!trailingSpace && words.length === 2) {
+    return matching(VIBE_ACTIONS, action);
+  }
+
   const valuePrefix = trailingSpace && words.length === 2 ? "" : words[2] ?? "";
   if (action === "rainbow") return matching(RAINBOW_VALUES, valuePrefix);
   if (action === "mode") return matching(MODE_VALUES, valuePrefix);
-  if (action === "model" && !valuePrefix) {
+  if (action === "model") {
     return [{ value: "provider/model", label: "provider/model", description: "Provider and model ID" }];
   }
-  if (action === "generate" && !valuePrefix) {
+  if (action === "generate") {
     return [{ value: "theme", label: "theme", description: "Theme name; optional count follows" }];
   }
   return null;
