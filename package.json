@@ -1,6 +1,6 @@
 {
   "name": "stickybar",
-  "version": "0.6.1",
+  "version": "1.0.0",
   "description": "Configurable two-line status bar and fixed editor extension for pi coding agent",
   "type": "module",
   "files": [

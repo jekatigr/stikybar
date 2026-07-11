@@ -1,19 +1,58 @@
 # stickybar
 
-A configurable two-line status bar for [pi](https://github.com/badlogic/pi-mono), with a fixed editor and themed working messages.
+A configurable two-line status bar, fixed editor, and themed working-message extension for [pi](https://github.com/badlogic/pi-mono).
 
-Stickybar is an independent continuation of [pi-powerline-footer](https://github.com/nicobailon/pi-powerline-footer).
+Stickybar is an independent continuation of [pi-powerline-footer](https://github.com/nicobailon/pi-powerline-footer) with a subset of it's features.
 
 ## Features
 
-- Configurable top and bottom status rows.
-- Deterministic overflow: items that do not fit on the top row move to the front of the bottom row; items that do not fit there are hidden from the end.
-- Fixed editor with a scrollable chat viewport, mouse-wheel scrolling, text selection, and terminal context-menu support.
-- `Home` jumps the fixed chat viewport to the top; `End` returns it to the bottom. PageUp/PageDown scroll by a page.
-- Optional AI-generated or file-backed themed working messages, including rainbow animation.
-- Live model, thinking, Git, context, token, cost, and elapsed-time status.
+- **Two configurable status rows** with live model, thinking level, Git state, context usage, token usage, cost, elapsed time, clock, session, hostname, cache, and extension-status segments.
+- **Predictable narrow-terminal behavior:** overflowing top-row items move to the beginning of the bottom row; remaining overflow is hidden from the end.
+- **Custom extension-status items** with labels and visibility controls.
+- **Fixed editor and chat viewport** with mouse-wheel scrolling, text selection, drag/double-click selection, and terminal context-menu support.
+- **Keyboard navigation** for the fixed chat viewport: `Home`, `End`, `PageUp`, and `PageDown`.
+- **Last-prompt preview** beneath the editor.
+- **Themed working vibes:** generated on demand or loaded from a local file, with optional rainbow animation.
 
-It does **not** provide bash mode, editor stash/history/clipboard tools, a welcome screen, presets, per-user themes, or Nerd Font detection.
+### Status layout
+
+Configure the order and contents of both status rows. The layout adapts when the terminal is narrow without reordering the items that remain visible.
+
+> **Screenshot placeholder:** `docs/screenshots/status-layout.png`
+>
+> _Wide and narrow terminal views showing both status rows and overflow behavior._
+
+### Fixed editor and chat navigation
+
+Keep the editor fixed while the chat viewport scrolls. Use the mouse wheel or `Home`, `End`, `PageUp`, and `PageDown` to navigate; standard mouse selection and terminal context-menu actions remain available.
+
+> **Screenshot placeholder:** `docs/screenshots/fixed-editor.png`
+>
+> _Scrolled chat viewport with the editor and status rows held in place._
+
+### Last prompt
+
+Optionally display the most recently submitted prompt beneath the editor for quick context while working.
+
+> **Screenshot placeholder:** `docs/screenshots/last-prompt.png`
+>
+> _Last-prompt preview below the fixed editor._
+
+### Extension statuses
+
+Show all extension statuses in one segment or promote individual values to named custom items.
+
+> **Screenshot placeholder:** `docs/screenshots/extension-statuses.png`
+>
+> _Built-in extension-status segment alongside a custom status item._
+
+### Working vibes
+
+Replace Pi's working message with short messages in any theme. Messages can be generated while Pi works or read locally from a previously generated vibe file. Rainbow animation is optional.
+
+> **Screenshot placeholder:** `docs/screenshots/working-vibes.png`
+>
+> _Themed working message, including a rainbow-animation example._
 
 ## Installation
 
@@ -21,11 +60,11 @@ It does **not** provide bash mode, editor stash/history/clipboard tools, a welco
 pi install npm:stickybar
 ```
 
-Restart pi to activate.
+Restart pi after installation.
 
 ## Configuration
 
-All extension settings live under one `stickybar` object. Pi loads global settings first and project-local settings second, so `.pi/settings.json` overrides `~/.pi/agent/settings.json`.
+Put settings under a single `stickybar` object. Pi reads global settings first, then project settings, so `.pi/settings.json` overrides `~/.pi/agent/settings.json`.
 
 ```json
 {
@@ -78,9 +117,7 @@ All extension settings live under one `stickybar` object. Pi loads global settin
 
 ### Status items
 
-`top` and `bottom` are ordered arrays. Each visible item appears at most once. Unknown item IDs are ignored.
-
-Available built-in items:
+`top` and `bottom` are ordered arrays. An item can appear only once, and unknown IDs are ignored.
 
 ```text
 model · thinking · path · git · context_pct · context_total
@@ -88,7 +125,11 @@ model · thinking · path · git · context_pct · context_total
  session · hostname · cache_read · cache_write · extension_statuses
 ```
 
-Use `custom:<id>` for a configured extension status item:
+Path options support `basename`, `abbreviated`, and `full`. Git polling accepts `full`, `branch`, or `off`.
+
+### Custom status items
+
+Use `custom:<id>` in a row and declare the matching item in `customItems`:
 
 ```json
 {
@@ -108,20 +149,26 @@ Use `custom:<id>` for a configured extension status item:
 }
 ```
 
-Extensions publish these values through `ctx.ui.setStatus("ci-status", "passing")`.
+Extensions publish a value with:
+
+```ts
+ctx.ui.setStatus("ci-status", "passing");
+```
 
 ### Fixed editor
 
-`fixedEditor` and `mouseScroll` are settings-only options. The fixed editor is enabled by default. Mouse selection, drag selection, double-click selection, and the chat viewport are all part of the fixed editor.
+The fixed editor is enabled by default. Set `fixedEditor` to `false` to use the normal editor layout. `mouseScroll` and `showLastPrompt` can be toggled independently.
 
-- `Home` — scroll chat to the top
-- `End` — scroll chat to the bottom
-- `PageUp` / `PageDown` — scroll chat by a page
-- Mouse wheel — scroll chat when `mouseScroll` is enabled
+| Input | Action |
+| --- | --- |
+| `Home` | Scroll chat to the top |
+| `End` | Scroll chat to the bottom |
+| `PageUp` / `PageDown` | Scroll chat by one page |
+| Mouse wheel | Scroll chat when `mouseScroll` is enabled |
 
 ### Working vibes
 
-Vibes are configured under `stickybar.vibe` and managed through `/stickybar vibe`:
+Manage vibes from pi with `/stickybar vibe`:
 
 ```text
 /stickybar                    Show current status
@@ -131,7 +178,7 @@ Vibes are configured under `stickybar.vibe` and managed through `/stickybar vibe
 /stickybar vibe rainbow on    Enable rainbow animation
 /stickybar vibe mode file     Use ~/.pi/agent/vibes/<theme>.txt
 /stickybar vibe model provider/model
-/stickybar vibe generate pirate 100
+/stickybar vibe generate evil cat corporation 100
 ```
 
-`generate` mode makes a short model request while Pi is working. `file` mode selects messages from a generated text file and makes no request.
+`generate` mode requests a short message from the configured model while Pi is working. `file` mode rotates through messages in `~/.pi/agent/vibes/<theme>.txt` and does not make a model request.
