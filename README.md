@@ -16,7 +16,7 @@ Input bar extension for [pi](https://github.com/badlogic/pi-mono) coding agent.
 ## Installation
 
 ```bash
-pi install npm:stickybar
+pi install npm:pi-stickybar
 ```
 
 Restart pi after installation or call `/reload`.

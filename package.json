@@ -1,11 +1,11 @@
 {
-  "name": "stickybar",
+  "name": "pi-stickybar",
   "version": "1.0.0",
   "description": "Configurable two-line status bar and fixed editor extension for pi coding agent",
   "type": "module",
   "files": [
     "src/**/*.ts",
-    "*.md",
+    "README.md",
     "*.json",
     "!progress.md"
   ],
