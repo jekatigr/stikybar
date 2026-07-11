@@ -1,8 +1,12 @@
-# stickybar
+# StickyBar
 
-A configurable two-line status bar, fixed editor, and themed working-message extension for [pi](https://github.com/badlogic/pi-mono).
+Input bar extension for [pi](https://github.com/badlogic/pi-mono) coding agent.
 
-Stickybar is an independent continuation of [pi-powerline-footer](https://github.com/nicobailon/pi-powerline-footer) with a subset of it's features.
+This project is a rework of [pi-powerline-footer](https://github.com/nicobailon/pi-powerline-footer) with simplified approach to customization and limited feature list.
+
+## Preview
+
+
 
 ## Features
 
@@ -64,7 +68,11 @@ Restart pi after installation.
 
 ## Configuration
 
+The extension has opiniated defaults, but it also configurable via `settings.json`
+
 Put settings under a single `stickybar` object. Pi reads global settings first, then project settings, so `.pi/settings.json` overrides `~/.pi/agent/settings.json`.
+
+Full configuration example:
 
 ```json
 {
@@ -102,7 +110,7 @@ Put settings under a single `stickybar` object. Pi reads global settings first, 
     },
 
     "vibe": {
-      "theme": "star trek",
+      "theme": "evil corporation",
       "mode": "generate",
       "model": "openai-codex/gpt-5.4-mini",
       "rainbow": true,
@@ -125,7 +133,46 @@ model · thinking · path · git · context_pct · context_total
  session · hostname · cache_read · cache_write · extension_statuses
 ```
 
-Path options support `basename`, `abbreviated`, and `full`. Git polling accepts `full`, `branch`, or `off`.
+| Item | Description | Example |
+| --- | --- | --- |
+| `model` | Current model in use | `gpt-5.4-mini` |
+| `thinking` | Reasoning/thinking level | `medium` |
+| `path` | Current file path (see options) | `src/index.ts` |
+| `git` | Git branch + working-tree state | `main ⇡3 ✗2 ?1` |
+| `context_pct` | Context window usage percentage | `45%` |
+| `context_total` | Total context tokens used | `12,450 tok` |
+| `token_in` | Input tokens for current turn | `3,200` |
+| `token_out` | Output tokens for current turn | `840` |
+| `token_total` | Total tokens (in + out) | `4,040` |
+| `cost` | Estimated cost of current session | `$0.012` |
+| `time_spent` | Elapsed time for current turn | `3s` |
+| `time` | Current clock time | `14:35` |
+| `session` | Session identifier or name | `sess-abc123` |
+| `hostname` | Machine hostname | `my-laptop` |
+| `cache_read` | Cache read hits | `128` |
+| `cache_write` | Cache write hits | `35` |
+| `extension_statuses` | All published extension statuses | `ci: passing · deploy: ready` |
+
+### Path options
+
+Configure how file paths are displayed via `options.path`:
+
+| Option | Values | Description |
+| --- | --- | --- |
+| `mode` | `basename`, `abbreviated`, `full` | How the path is rendered. `basename` shows only the filename (`index.ts`). `abbreviated` keeps the full path but truncates from the start with `…` when it exceeds `maxLength`. `full` always shows the complete absolute path. |
+| `maxLength` | number (default: 32) | Maximum length for `abbreviated` mode. Longer paths are truncated from the beginning and prefixed with `…`. |
+
+### Git polling options
+
+Configure git status detail via `options.git`:
+
+| Option | Values | Description |
+| --- | --- | --- |
+| `polling` | `full`, `branch`, `off` | How much git info to gather. `full` polls for branch name plus staged, unstaged, and untracked counts. `branch` shows only the current branch name without scanning working-tree changes. `off` skips local polling entirely and relies on whatever branch info pi provides. |
+| `showBranch` | boolean (default: true) | Include the branch name in the segment. |
+| `showStaged` | boolean (default: true) | Show the count of staged changes (`⇡`). |
+| `showUnstaged` | boolean (default: true) | Show the count of unstaged changes (`✗`). |
+| `showUntracked` | boolean (default: true) | Show the count of untracked files (`?`). |
 
 ### Custom status items
 
