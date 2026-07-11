@@ -19,7 +19,7 @@ const COLORS: Record<SemanticColor, Color> = {
 
 export function color(theme: ThemeLike, name: SemanticColor, text: string): string {
   const value = COLORS[name];
-  if (!value.startsWith("#")) return theme.fg(value, text);
+  if (!value.startsWith("#")) return theme.fg(value as ThemeColor, text);
   const hex = value.slice(1);
   const r = Number.parseInt(hex.slice(0, 2), 16);
   const g = Number.parseInt(hex.slice(2, 4), 16);

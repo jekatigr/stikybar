@@ -384,7 +384,7 @@ export default function powerlineFooter(pi: ExtensionAPI) {
     frozenElapsedMs = 0;
     liveUsage = null;
     lastUserPrompt = "";
-    thinkingLevel = ctx.getThinkingLevel?.() ?? null;
+    thinkingLevel = pi.getThinkingLevel();
     activeModel = ctx.model ?? null;
     initVibeManager(ctx, config.vibe);
     if (ctx.hasUI) setupUi(ctx);
@@ -414,7 +414,7 @@ export default function powerlineFooter(pi: ExtensionAPI) {
     activeModel = event.model ?? ctx.model ?? null;
     invalidate(true);
   });
-  pi.on("thinking_level_select", async (event, ctx) => { currentCtx = ctx; thinkingLevel = typeof event.level === "string" ? event.level : ctx.getThinkingLevel?.() ?? null; invalidate(true); });
+  pi.on("thinking_level_select", async (event, ctx) => { currentCtx = ctx; thinkingLevel = event.level; invalidate(true); });
   pi.on("session_tree", async (_event, ctx) => { currentCtx = ctx; thinkingLevel = null; liveUsage = null; invalidate(true); });
 
   pi.on("before_agent_start", async (event, ctx) => {

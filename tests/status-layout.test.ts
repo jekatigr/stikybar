@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parsePowerlineConfig } from "../powerline-config.ts";
-import { renderStatusLayout } from "../status-layout.ts";
-import type { SegmentContext } from "../types.ts";
+import { parsePowerlineConfig } from "../src/powerline-config.ts";
+import { renderStatusLayout } from "../src/status-layout.ts";
+import type { SegmentContext } from "../src/types.ts";
 
 const context: SegmentContext = {
   model: { id: "model" },

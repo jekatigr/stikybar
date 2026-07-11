@@ -100,5 +100,5 @@ export function renderSegment(id: StatusLineSegmentId, ctx: SegmentContext): Ren
     const content = value ? (custom.prefix ? `${custom.prefix}${SEP}${value}` : value) : (custom.prefix ?? custom.id);
     return { content, visible: true };
   }
-  return SEGMENTS[id].render(ctx);
+  return SEGMENTS[id as BuiltinStatusLineSegmentId]?.render(ctx) ?? { content: "", visible: false };
 }

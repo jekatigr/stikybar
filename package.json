@@ -4,11 +4,10 @@
   "description": "Configurable two-line status bar and fixed editor extension for pi coding agent",
   "type": "module",
   "files": [
-    "*.ts",
+    "src/**/*.ts",
     "*.md",
     "*.json",
-    "!progress.md",
-    "fixed-editor/**/*.ts"
+    "!progress.md"
   ],
   "keywords": [
     "pi-package",
@@ -20,7 +19,8 @@
   ],
   "license": "MIT",
   "scripts": {
-    "test": "node --experimental-strip-types --test tests/**/*.test.ts"
+    "test": "node --experimental-strip-types --test tests/**/*.test.ts",
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "@earendil-works/pi-ai": "^0.80.6",
@@ -30,11 +30,13 @@
   "devDependencies": {
     "@earendil-works/pi-ai": "^0.80.6",
     "@earendil-works/pi-coding-agent": "^0.80.6",
-    "@earendil-works/pi-tui": "^0.80.6"
+    "@earendil-works/pi-tui": "^0.80.6",
+    "@types/node": "^24.12.4",
+    "typescript": "^5.9.3"
   },
   "pi": {
     "extensions": [
-      "./index.ts"
+      "./src/index.ts"
     ]
   }
 }

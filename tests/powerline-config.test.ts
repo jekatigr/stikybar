@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parsePowerlineConfig } from "../powerline-config.ts";
+import { parsePowerlineConfig } from "../src/powerline-config.ts";
 
 test("powerline defaults to the single built-in layout", () => {
   const config = parsePowerlineConfig(undefined);
