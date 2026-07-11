@@ -82,12 +82,6 @@ Full configuration example:
 
 `top` and `bottom` are ordered arrays. An item can appear only once, and unknown IDs are ignored.
 
-```text
-model · thinking · path · git · context_pct · context_total
- token_in · token_out · token_total · cost · time_spent · time
- session · hostname · cache_read · cache_write · extension_statuses
-```
-
 | Item | Description | Example |
 | --- | --- | --- |
 | `model` | Current model in use | `gpt-5.4-mini` |
